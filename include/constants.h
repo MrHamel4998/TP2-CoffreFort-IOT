@@ -19,6 +19,7 @@
 // Servo moteur
 #include <ESP32Servo.h>
 #define SERVO_PIN 13
+#define SERVO_STOP_ANGLE 90
 
 // Wifi & Firebase
 #include <WiFi.h>
