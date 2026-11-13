@@ -30,6 +30,8 @@ ButtonPressType getButtonPressType();
 #include <ESP32Servo.h>
 #define SERVO_PIN 13
 #define SERVO_STOP_ANGLE 90
+#define SERVO_OPEN_ANGLE 0
+#define SERVO_CLOSE_ANGLE 180
 
 // Wifi & Firebase
 #include <WiFi.h>

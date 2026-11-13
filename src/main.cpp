@@ -15,7 +15,6 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
 // Servo moteur
 Servo servo;
 
-
 void setup() {
   Serial.begin(9600);
 
