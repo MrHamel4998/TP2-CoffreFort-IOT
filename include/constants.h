@@ -3,6 +3,16 @@
 // Boutons
 #define BUTTON_A_PIN 32
 #define BUTTON_B_PIN 33
+#define BUTTON_DEBOUNCE_TIME 30
+#define BUTTON_LONG_PRESS_TIME 3000
+
+enum ButtonPressType {
+    BUTTON_NONE,
+    BUTTON_SHORT,
+    BUTTON_LONG
+};
+
+ButtonPressType getButtonPressType();
 
 // Écran TM1637
 #include <TM1637Display.h>
