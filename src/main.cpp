@@ -1,5 +1,5 @@
 #include "constants.h"
-#include "addons/TokenHelper.h" 
+#include "addons/TokenHelper.h"
 
 // Écran TM1637
 TM1637Display display(CLK_PIN, DIO_PIN);
@@ -15,6 +15,10 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
 
 // Servo moteur
 Servo servo;
+
+// Variables
+bool isLocked = false;
+int userCode[4] = {};
 
 void setup() {
   Serial.begin(9600);

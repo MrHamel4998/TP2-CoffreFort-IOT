@@ -50,3 +50,14 @@ ButtonPressType getButtonPressType(int pin, ButtonState &button);
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>
 #include <secrets.h>
+
+// Machine à états
+enum State {
+    NON_PROGRAMME,
+    PROG_SAISIE,
+    PROG_CONFIRMATION,
+    OUVERT,
+    FERME
+};
+
+extern State currentState;
