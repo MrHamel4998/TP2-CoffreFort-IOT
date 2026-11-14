@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include "servo.h"
 #include "services.h"
+#include "code.h"
 
 State currentState = NON_PROGRAMME;
 bool stateChanged = true;
@@ -27,6 +28,7 @@ void updateState()
     case NON_PROGRAMME:
         if (stateChanged)
         {
+            Serial.println("État: NON_PROGRAMME");
             setMatrixColor(0, 255, 0);
             openServo();
             clearDisplay();
@@ -40,7 +42,15 @@ void updateState()
         break;
 
     case PROG_SAISIE:
-        // Todo: Logique de l'état PROG_SAISIE
+        if (stateChanged)
+        {
+            Serial.println("État: PROG_SAISIE");
+            setMatrixColor(255, 165, 0);
+            resetCode();
+            stateChanged = false;
+        }
+
+        handleCodeInput();
         break;
 
     case PROG_CONFIRMATION:

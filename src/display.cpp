@@ -9,9 +9,23 @@ void initDisplay()
     display.clear();
 }
 
-void updateDisplay()
+void updateDisplay(int code[], int currentDigit)
 {
-    // Todo
+    uint8_t segments[4];
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (i <= currentDigit)
+        {
+            segments[i] = display.encodeDigit(code[i]);
+        }
+        else
+        {
+            segments[i] = SEG_G;
+        }
+    }
+
+    display.setSegments(segments);
 }
 
 void clearDisplay()

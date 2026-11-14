@@ -4,5 +4,5 @@
 extern TM1637Display display;
 
 void initDisplay();
-void updateDisplay();
+void updateDisplay(int code[], int currentDigit);
 void clearDisplay();

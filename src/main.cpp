@@ -6,10 +6,7 @@
 #include "servo.h"
 #include "states.h"
 #include "services.h"
-
-// Variables
-bool isLocked = false;
-int userCode[4] = {};
+#include "code.h"
 
 void setup() {
     Serial.begin(9600);

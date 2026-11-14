@@ -8,7 +8,6 @@ unsigned long servoStartTime = 0;
 void initServo()
 {
     servo.attach(SERVO_PIN);
-    servo.write(SERVO_STOP_ANGLE);
 }
 
 void updateServo()
