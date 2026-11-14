@@ -1,6 +1,17 @@
-#include "constants.h"
+#include "buttons.h"
 
-// Boutons
+void initButtons()
+{
+    pinMode(BUTTON_A_PIN, INPUT_PULLUP);
+    pinMode(BUTTON_B_PIN, INPUT_PULLUP);
+}
+
+void updateButtons()
+{
+    getButtonPressType(BUTTON_A_PIN, buttonA);
+    getButtonPressType(BUTTON_B_PIN, buttonB);
+}
+
 /*
  * Aide de ChatGPT pour adapter la fonction getButtonPressType,
  * afin de gérer les appuis courts et longs des deux boutons.
@@ -39,6 +50,3 @@ ButtonPressType getButtonPressType(int pin, ButtonState &button)
 
     return BUTTON_NONE;
 }
-
-// Machine à états
-State currentState = NON_PROGRAMME;

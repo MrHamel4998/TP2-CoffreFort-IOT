@@ -1,49 +1,39 @@
 #include "constants.h"
 #include "addons/TokenHelper.h"
-
-// Écran TM1637
-TM1637Display display(CLK_PIN, DIO_PIN);
-
-// Matrice NeoPixel
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
-    8, 8,
-    MATRIX_PIN,
-    NEO_MATRIX_TOP + NEO_MATRIX_LEFT +
-    NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
-    NEO_GRB + NEO_KHZ800
-);
-
-// Servo moteur
-Servo servo;
+#include "buttons.h"
+#include "display.h"
+#include "matrix.h"
+#include "servo.h"
+#include "states.h"
+#include "services.h"
 
 // Variables
 bool isLocked = false;
 int userCode[4] = {};
 
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);
 
-  // TM1637
-  display.setBrightness(7);
-  display.clear();
-  Serial.println("Écran TM1637 initialisé.");
+    // TM1637
+    initDisplay();
+    Serial.println("Écran TM1637 initialisé.");
 
-  // NeoMatrix
-  matrix.begin();
-  matrix.setBrightness(BRIGHTNESS);
-  matrix.fillScreen(0);
-  matrix.show();
-  Serial.println("Matrice NeoPixel initialisée.");
+    // NeoMatrix
+    initMatrix();
+    Serial.println("Matrice NeoPixel initialisée.");
 
-  // Servo moteur
-  servo.attach(SERVO_PIN);
-  servo.write(SERVO_STOP_ANGLE);
-  Serial.println("Servo moteur initialisé.");
+    // Servo moteur
+    initServo();
+    Serial.println("Servo moteur initialisé.");
 
-  // Boutons
-  pinMode(BUTTON_A_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_B_PIN, INPUT_PULLUP);
-  Serial.println("Boutons initialisés.");
+    // Boutons
+    initButtons();
+    Serial.println("Boutons initialisés.");
+
+    // Services
+    initWiFi();
+    initFirebase();
+    Serial.println("Services WiFi et Firebase initialisés.");
 }
 
 void loop() {
