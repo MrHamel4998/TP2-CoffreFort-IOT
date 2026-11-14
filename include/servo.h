@@ -4,5 +4,6 @@
 extern Servo servo;
 
 void initServo();
+void updateServo();
 void openServo();
 void closeServo();

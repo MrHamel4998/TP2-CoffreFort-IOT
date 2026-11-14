@@ -16,6 +16,7 @@
 
 // Servo moteur
 #define SERVO_PIN 13
+#define SERVO_DURATION 333
 #define SERVO_STOP_ANGLE 90
 #define SERVO_OPEN_ANGLE 0
 #define SERVO_CLOSE_ANGLE 180

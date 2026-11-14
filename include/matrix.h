@@ -6,4 +6,4 @@
 extern Adafruit_NeoMatrix matrix;
 
 void initMatrix();
-void updateMatrix(uint16_t color);
+void setMatrixColor(int r, int g, int b);

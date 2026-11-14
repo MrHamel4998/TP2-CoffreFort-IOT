@@ -5,3 +5,4 @@ extern TM1637Display display;
 
 void initDisplay();
 void updateDisplay();
+void clearDisplay();

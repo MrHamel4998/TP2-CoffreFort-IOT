@@ -2,15 +2,34 @@
 
 Servo servo;
 
-void initServo() {
+bool servoMoving = false;
+unsigned long servoStartTime = 0;
+
+void initServo()
+{
     servo.attach(SERVO_PIN);
     servo.write(SERVO_STOP_ANGLE);
 }
 
-void openServo() {
-    // TODO
+void updateServo()
+{
+    if (servoMoving && millis() - servoStartTime >= SERVO_DURATION)
+    {
+        servo.write(SERVO_STOP_ANGLE);
+        servoMoving = false;
+    }
 }
 
-void closeServo() {
-    // TODO
+void openServo()
+{
+    servo.write(SERVO_OPEN_ANGLE);
+    servoStartTime = millis();
+    servoMoving = true;
+}
+
+void closeServo()
+{
+    servo.write(SERVO_CLOSE_ANGLE);
+    servoStartTime = millis();
+    servoMoving = true;
 }

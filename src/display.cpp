@@ -13,3 +13,8 @@ void updateDisplay()
 {
     // Todo
 }
+
+void clearDisplay()
+{
+    display.clear();
+}

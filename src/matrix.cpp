@@ -15,6 +15,8 @@ void initMatrix() {
     matrix.show();
 }
 
-void updateMatrix(uint16_t color) {
-    // TODO
+void setMatrixColor(int r, int g, int b) {
+    uint16_t color = matrix.Color(r, g, b);
+    matrix.fillScreen(color);
+    matrix.show();
 }

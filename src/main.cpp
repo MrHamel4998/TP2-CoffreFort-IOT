@@ -37,5 +37,6 @@ void setup() {
 }
 
 void loop() {
-
+    updateState();
+    updateServo();
 }

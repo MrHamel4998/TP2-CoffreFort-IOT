@@ -10,4 +10,5 @@ enum State {
 
 extern State currentState;
 
+void changeState(State newState);
 void updateState();
