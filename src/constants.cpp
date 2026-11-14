@@ -1,32 +1,38 @@
 #include "constants.h"
 
-ButtonPressType getButtonPressType() {
-    static unsigned long buttonPressStartTime = 0;
-    static bool buttonPressed = false;
-    static bool longPressDetected = false;
+/*
+ * Aide de ChatGPT pour adapter la fonction getButtonPressType,
+ * afin de gérer les appuis courts et longs des deux boutons.
+ */
+ButtonState buttonA;
+ButtonState buttonB;
 
-    if (digitalRead(BUTTON_PIN) == LOW) {
-        if (!buttonPressed) {
-            buttonPressed = true;
-            buttonPressStartTime = millis();
-            longPressDetected = false;
+ButtonPressType getButtonPressType(int pin, ButtonState &button)
+{
+    if (digitalRead(pin) == LOW)
+    {
+        if (!button.pressed)
+        {
+            button.pressed = true;
+            button.pressStart = millis();
+            button.longDetected = false;
         }
 
-        if (!longPressDetected &&
-            millis() - buttonPressStartTime >= BUTTON_LONG_PRESS_TIME) {
-
-            longPressDetected = true;
+        if (!button.longDetected &&
+            millis() - button.pressStart >= BUTTON_LONG_PRESS_TIME)
+        {
+            button.longDetected = true;
             return BUTTON_LONG;
         }
+    }
+    else if (button.pressed)
+    {
+        button.pressed = false;
 
-    } else {
-        if (buttonPressed) {
-            buttonPressed = false;
-
-            if (!longPressDetected &&
-                millis() - buttonPressStartTime >= BUTTON_DEBOUNCE_TIME) {
-                return BUTTON_SHORT;
-            }
+        if (!button.longDetected &&
+            millis() - button.pressStart >= BUTTON_DEBOUNCE_TIME)
+        {
+            return BUTTON_SHORT;
         }
     }
 

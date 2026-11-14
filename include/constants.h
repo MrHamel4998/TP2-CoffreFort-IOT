@@ -1,30 +1,43 @@
 #include <Arduino.h>
 
 // Boutons
-#define BUTTON_A_PIN 32
-#define BUTTON_B_PIN 33
+#define BUTTON_A_PIN 14
+#define BUTTON_B_PIN 27
 #define BUTTON_DEBOUNCE_TIME 30
 #define BUTTON_LONG_PRESS_TIME 3000
 
+/*
+ * Aide de ChatGPT pour adapter la structure ButtonState et la fonction getButtonPressType,
+ * afin de gérer les appuis courts et longs des deux boutons.
+ */
 enum ButtonPressType {
     BUTTON_NONE,
     BUTTON_SHORT,
     BUTTON_LONG
 };
 
-ButtonPressType getButtonPressType();
+struct ButtonState {
+    unsigned long pressStart = 0;
+    bool pressed = false;
+    bool longDetected = false;
+};
+
+extern ButtonState buttonA;
+extern ButtonState buttonB;
+
+ButtonPressType getButtonPressType(int pin, ButtonState &button);
 
 // Écran TM1637
 #include <TM1637Display.h>
-#define CLK_PIN 27
-#define DIO_PIN 26
+#define CLK_PIN 26
+#define DIO_PIN 25
 #define BRIGHTNESS 20
 
 // Matrice NeoPixel (WS2812B)
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
-#define LED_PIN 25
+#define MATRIX_PIN 12
 
 // Servo moteur
 #include <ESP32Servo.h>
@@ -36,5 +49,4 @@ ButtonPressType getButtonPressType();
 // Wifi & Firebase
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>
-#include "addons/TokenHelper.h" 
 #include <secrets.h>
