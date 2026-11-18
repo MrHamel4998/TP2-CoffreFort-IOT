@@ -1,3 +1,4 @@
+#pragma once
 #include "constants.h"
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>

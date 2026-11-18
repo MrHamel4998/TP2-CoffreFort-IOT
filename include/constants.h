@@ -13,7 +13,6 @@
 
 // Matrice NeoPixel (WS2812B)
 #define MATRIX_PIN 12
-#define BLINK_INTERVAL 300;
 
 // Servo moteur
 // ESP32 5V ---> Fil rouge (+)

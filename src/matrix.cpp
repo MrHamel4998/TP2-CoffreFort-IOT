@@ -1,70 +1,122 @@
 #include "matrix.h"
 
+const unsigned long BLINK_INTERVAL = 300;
+const int RESULT_BLINKS = 3;
+
+Adafruit_NeoMatrix matrix(
+    8, 8, MATRIX_PIN,
+    NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
+    NEO_GRB + NEO_KHZ800
+);
+
+MatrixColor blinkColor = MATRIX_GREEN;
+unsigned long lastBlink = 0;
+int completedBlinks = 0;
 bool blinking = false;
-bool matrixOn = false;
+bool blinkOn = false;
+bool repeating = false;
 
-int blinkCount = 0;
-int maxBlinks = 0;
+void showColor(MatrixColor color)
+{
+    int red = 0;
+    int green = 0;
+    int blue = 0;
 
-int blinkR, blinkG, blinkB;
+    switch (color)
+    {
+    case MATRIX_RED:
+        red = 255;
+        break;
+    case MATRIX_GREEN:
+        green = 255;
+        break;
+    case MATRIX_ORANGE:
+        red = 255;
+        green = 165;
+        break;
+    }
 
-unsigned long lastBlinkTime = 0;
+    matrix.fillScreen(matrix.Color(red, green, blue));
+    matrix.show();
+}
 
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
-    8, 8,
-    MATRIX_PIN,
-    NEO_MATRIX_TOP + NEO_MATRIX_LEFT +
-        NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
-    NEO_GRB + NEO_KHZ800);
+void clearMatrix()
+{
+    matrix.fillScreen(0);
+    matrix.show();
+}
+
+void startBlink(MatrixColor color, bool repeat)
+{
+    blinkColor = color;
+    repeating = repeat;
+    completedBlinks = 0;
+    blinkOn = false;
+    blinking = true;
+    lastBlink = millis();
+}
 
 void initMatrix()
 {
     matrix.begin();
     matrix.setBrightness(BRIGHTNESS);
-    matrix.fillScreen(0);
-    matrix.show();
+    showColor(MATRIX_GREEN);
 }
 
-void setMatrixColor(int r, int g, int b)
+void matrixSetMode(MatrixMode mode)
 {
-    uint16_t color = matrix.Color(r, g, b);
-    matrix.fillScreen(color);
-    matrix.show();
+    blinking = false;
+    repeating = false;
+
+    switch (mode)
+    {
+    case MATRIX_MODE_GREEN:
+        showColor(MATRIX_GREEN);
+        break;
+    case MATRIX_MODE_ORANGE_BLINK:
+        startBlink(MATRIX_ORANGE, true);
+        break;
+    case MATRIX_MODE_RED:
+        showColor(MATRIX_RED);
+        break;
+    }
 }
 
-void startMatrixBlink(int r, int g, int b, int times)
+void matrixError()
 {
-    blinkR = r;
-    blinkG = g;
-    blinkB = b;
+    startBlink(MATRIX_RED, false);
+}
 
-    maxBlinks = times;
-    blinkCount = 0;
-
-    matrixOn = false;
-    blinking = true;
-    lastBlinkTime = millis();
+void matrixSuccess()
+{
+    startBlink(MATRIX_GREEN, false);
 }
 
 void updateMatrix()
 {
-    if (!blinking) return;
-
-    if (millis() - lastBlinkTime >= 300)
+    if (!blinking || millis() - lastBlink < BLINK_INTERVAL)
     {
-        lastBlinkTime = millis();
-        matrixOn = !matrixOn;
-
-        if (matrixOn) {
-            setMatrixColor(blinkR, blinkG, blinkB);
-        }
-        else {
-            setMatrixColor(0, 0, 0);
-            blinkCount++;
-
-            if (blinkCount >= maxBlinks) {
-                blinking = false;
-            }
-        }
+        return;
     }
+
+    lastBlink = millis();
+    blinkOn = !blinkOn;
+    if (blinkOn)
+    {
+        showColor(blinkColor);
+    }
+    else
+    {
+        clearMatrix();
+    }
+
+    if (!blinkOn && !repeating && ++completedBlinks >= RESULT_BLINKS)
+    {
+        blinking = false;
+    }
+}
+
+bool matrixAnimationComplete()
+{
+    return !repeating && !blinking;
 }

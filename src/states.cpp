@@ -8,6 +8,38 @@
 
 State currentState = NON_PROGRAMME;
 bool stateChanged = true;
+bool waitingForMatrix = false;
+State stateAfterMatrix = NON_PROGRAMME;
+
+void enterState(State state)
+{
+    switch (state)
+    {
+    case NON_PROGRAMME:
+        Serial.println("État: NON_PROGRAMME");
+        matrixSetMode(MATRIX_MODE_GREEN);
+        displayClear();
+        break;
+    case PROG_SAISIE:
+        Serial.println("État: PROG_SAISIE");
+        matrixSetMode(MATRIX_MODE_ORANGE_BLINK);
+        beginCodeEntry(CODE_INITIAL);
+        break;
+    case PROG_CONFIRMATION:
+        Serial.println("État: PROG_CONFIRMATION");
+        matrixSetMode(MATRIX_MODE_ORANGE_BLINK);
+        beginCodeEntry(CODE_CONFIRMATION);
+        break;
+    case OUVERT:
+        Serial.println("État: OUVERT");
+        // Todo: Logique de l'état OUVERT
+        break;
+    case FERME:
+        Serial.println("État: FERME");
+        // Todo: Logique de l'état FERME
+        break;
+    }
+}
 
 void changeState(State newState)
 {
@@ -20,56 +52,69 @@ void changeState(State newState)
 
 void updateState()
 {
-    ButtonPressType A = getButtonPressType(BUTTON_A_PIN, buttonA);
-    ButtonPressType B = getButtonPressType(BUTTON_B_PIN, buttonB);
+    if (stateChanged)
+    {
+        enterState(currentState);
+        stateChanged = false;
+    }
+
+    if (waitingForMatrix)
+    {
+        if (matrixAnimationComplete())
+        {
+            waitingForMatrix = false;
+            changeState(stateAfterMatrix);
+        }
+        return;
+    }
 
     switch (currentState)
     {
     case NON_PROGRAMME:
-        if (stateChanged)
-        {
-            Serial.println("État: NON_PROGRAMME");
-            setMatrixColor(0, 255, 0);
-            openServo();
-            clearDisplay();
-
-            stateChanged = false;
-        }
-        if (B == BUTTON_LONG)
+        if (getButtonPressType(BUTTON_B_PIN, buttonB) == BUTTON_LONG)
         {
             changeState(PROG_SAISIE);
         }
         break;
 
     case PROG_SAISIE:
-        if (stateChanged)
+    {
+        const CodeEntryResult result = updateCodeEntry();
+        if (result == CODE_COMPLETE)
         {
-            Serial.println("État: PROG_SAISIE");
-            setMatrixColor(255, 165, 0);
-            resetCode();
-            stateChanged = false;
+            changeState(PROG_CONFIRMATION);
         }
-
-        handleCodeEntry();
         break;
+    }
 
     case PROG_CONFIRMATION:
-        if (stateChanged)
+    {
+        const CodeEntryResult result = updateCodeEntry();
+        if (result == CODE_MATCH || result == CODE_MISMATCH)
         {
-            setMatrixColor(255, 165, 0);
-            resetCodeConfirmation();
-            stateChanged = false;
-        }
+            if (result == CODE_MATCH)
+            {
+                matrixSuccess();
+                stateAfterMatrix = OUVERT;
+            }
+            else
+            {
+                matrixError();
+                stateAfterMatrix = PROG_SAISIE;
+            }
 
-        handleCodeConfirmation();
+            waitingForMatrix = true;
+        }
         break;
+    }
 
     case OUVERT:
         // Todo: Logique de l'état OUVERT
         break;
 
     case FERME:
+    {
         // Todo: Logique de l'état FERME
-        break;
+    }
     }
 }
