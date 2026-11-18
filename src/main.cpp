@@ -36,4 +36,5 @@ void setup() {
 void loop() {
     updateState();
     updateServo();
+    updateMatrix();
 }

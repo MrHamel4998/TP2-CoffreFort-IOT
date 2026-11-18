@@ -1,5 +1,11 @@
 #include "constants.h"
 
+void handleCodeInput(int code[], int &digit);
+
 void resetCode();
-void handleCodeInput();
-void displayEnteredCode();
+void handleCodeEntry();
+
+void resetCodeConfirmation();
+void handleCodeConfirmation();
+
+bool checkCode();

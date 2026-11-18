@@ -50,11 +50,18 @@ void updateState()
             stateChanged = false;
         }
 
-        handleCodeInput();
+        handleCodeEntry();
         break;
 
     case PROG_CONFIRMATION:
-        // Todo: Logique de l'état PROG_CONFIRMATION
+        if (stateChanged)
+        {
+            setMatrixColor(255, 165, 0);
+            resetCodeConfirmation();
+            stateChanged = false;
+        }
+
+        handleCodeConfirmation();
         break;
 
     case OUVERT:
