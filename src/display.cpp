@@ -5,11 +5,16 @@ TM1637Display display(CLK_PIN, DIO_PIN);
 
 void initDisplay()
 {
-    display.setBrightness(3);
+    display.setBrightness(BRIGHTNESS);
     display.clear();
 }
 
-void updateDisplay(int code[], int currentDigit)
+void displayClear()
+{
+    display.clear();
+}
+
+void updateDisplayCode(int code[], int currentDigit)
 {
     uint8_t segments[4];
 
@@ -26,9 +31,4 @@ void updateDisplay(int code[], int currentDigit)
     }
 
     display.setSegments(segments);
-}
-
-void clearDisplay()
-{
-    display.clear();
 }

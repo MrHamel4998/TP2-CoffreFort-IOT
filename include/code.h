@@ -1,11 +1,9 @@
+#pragma once
 #include "constants.h"
 
-void handleCodeInput(int code[], int &digit);
+enum CodeEntryResult { CODE_IN_PROGRESS, CODE_COMPLETE, CODE_MATCH, CODE_MISMATCH };
+enum CodeEntryMode { CODE_INITIAL, CODE_CONFIRMATION, CODE_UNLOCK };
 
-void resetCode();
-void handleCodeEntry();
-
-void resetCodeConfirmation();
-void handleCodeConfirmation();
-
-bool checkCode();
+void beginCodeEntry(CodeEntryMode mode);
+CodeEntryResult updateCodeEntry();
+bool codesMatch();

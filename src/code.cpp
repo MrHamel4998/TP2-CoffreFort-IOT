@@ -4,111 +4,86 @@
 #include "constants.h"
 #include "states.h"
 
-int enteredCode[4] = {0, 0, 0, 0};
-int confirmationCode[4] = {0, 0, 0, 0};
+const int CODE_LENGTH = 4;
 
+int savedCode[CODE_LENGTH] = {0, 0, 0, 0};
+int workingCode[CODE_LENGTH] = {0, 0, 0, 0};
 int currentDigit = 0;
-int confirmationDigit = 0;
 
-bool codeInputComplete = false;
+CodeEntryMode mode = CODE_INITIAL;
+bool complete = false;
 
-void handleCodeInput(int code[], int &digit)
+bool codesMatch()
 {
-    if (digit >= 4)
-        return;
-
-    ButtonPressType A = getButtonPressType(BUTTON_A_PIN, buttonA);
-    ButtonPressType B = getButtonPressType(BUTTON_B_PIN, buttonB);
-
-    if (A == BUTTON_SHORT)
+    for (int i = 0; i < CODE_LENGTH; ++i)
     {
-        code[digit]++;
-
-        if (code[digit] > 9)
-        {
-            code[digit] = 0;
-        }
-
-        updateDisplay(code, digit);
-    }
-
-    if (B == BUTTON_SHORT)
-    {
-        digit++;
-        Serial.print("Digit incremented to: ");
-        Serial.println(digit);
-
-        if (digit >= 4)
-        {
-            codeInputComplete = true;
-        }
-        else
-        {
-            updateDisplay(code, digit);
-        }
-    }
-}
-
-void resetCode()
-{
-    currentDigit = 0;
-    codeInputComplete = false;
-
-    for (int i = 0; i < 4; i++)
-    {
-        enteredCode[i] = 0;
-    }
-
-    updateDisplay(enteredCode, currentDigit);
-}
-
-void handleCodeEntry()
-{
-    if (!codeInputComplete)
-    {
-        handleCodeInput(enteredCode, currentDigit);
-    }
-}
-
-void resetCodeConfirmation()
-{
-    confirmationDigit = 0;
-    codeInputComplete = false;
-
-    for (int i = 0; i < 4; i++)
-    {
-        confirmationCode[i] = 0;
-    }
-
-    updateDisplay(confirmationCode, confirmationDigit);
-}
-
-void handleCodeConfirmation()
-{
-    if (!codeInputComplete)
-    {
-        handleCodeInput(confirmationCode, confirmationDigit);
-    }
-
-    if (checkCode())
-    {
-        startMatrixBlink(0, 255, 0, 3);
-    }
-    else
-    {
-        startMatrixBlink(255, 0, 0, 3);
-    }
-}
-
-bool checkCode()
-{
-    for (int i = 0; i < 4; i++)
-    {
-        if (enteredCode[i] != confirmationCode[i])
+        if (savedCode[i] != workingCode[i])
         {
             return false;
         }
     }
-
     return true;
+}
+
+void beginCodeEntry(CodeEntryMode entryMode)
+{
+    mode = entryMode;
+    currentDigit = 0;
+    complete = false;
+
+    for (int i = 0; i < CODE_LENGTH; ++i)
+    {
+        workingCode[i] = 0;
+    }
+    updateDisplayCode(workingCode, currentDigit);
+}
+
+CodeEntryResult updateCodeEntry()
+{
+    if (complete)
+    {
+        return CODE_IN_PROGRESS;
+    }
+
+    const ButtonPressType A = getButtonPressType(BUTTON_A_PIN, buttonA);
+    const ButtonPressType B = getButtonPressType(BUTTON_B_PIN, buttonB);
+
+    if (A == BUTTON_SHORT)
+    {
+        workingCode[currentDigit]++;
+
+        if (workingCode[currentDigit] > 9)
+        {
+            workingCode[currentDigit] = 0;
+        }
+
+        updateDisplayCode(workingCode, currentDigit);
+    }
+
+    if (B == BUTTON_SHORT)
+    {
+        ++currentDigit;
+        if (currentDigit >= CODE_LENGTH)
+        {
+            complete = true;
+            if (mode == CODE_INITIAL)
+            {
+                for (int i = 0; i < CODE_LENGTH; ++i)
+                {
+                    savedCode[i] = workingCode[i];
+                }
+                return CODE_COMPLETE;
+            }
+            if (codesMatch())
+            {
+                return CODE_MATCH;
+            }
+            else
+            {
+                return CODE_MISMATCH;
+            }
+        }
+        updateDisplayCode(workingCode, currentDigit);
+    }
+    return CODE_IN_PROGRESS;
 }

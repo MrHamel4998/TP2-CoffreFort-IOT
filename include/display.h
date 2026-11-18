@@ -1,8 +1,7 @@
+#pragma once
 #include "constants.h"
 #include <TM1637Display.h>
 
-extern TM1637Display display;
-
 void initDisplay();
-void updateDisplay(int code[], int currentDigit);
-void clearDisplay();
+void displayClear();
+void updateDisplayCode(int code[], int currentDigit);

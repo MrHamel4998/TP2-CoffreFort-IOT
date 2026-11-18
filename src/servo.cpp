@@ -1,7 +1,6 @@
 #include "servo.h"
 
 Servo servo;
-
 bool servoMoving = false;
 unsigned long servoStartTime = 0;
 
