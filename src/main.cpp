@@ -1,5 +1,4 @@
 #include "constants.h"
-#include "addons/TokenHelper.h"
 #include "buttons.h"
 #include "display.h"
 #include "matrix.h"
@@ -7,6 +6,11 @@
 #include "states.h"
 #include "services.h"
 #include "code.h"
+
+// ChatGPT a corrigé le dépassement : le handshake TLS/ECDSA de Firebase dépassait la stack par défaut de 8 Ko.
+size_t getArduinoLoopTaskStackSize(void) {
+    return 16384;
+}
 
 void setup() {
     Serial.begin(9600);
