@@ -32,7 +32,8 @@ void enterState(State state)
         break;
     case OUVERT:
         Serial.println("État: OUVERT");
-        // Todo: Logique de l'état OUVERT
+        matrixSetMode(MATRIX_MODE_GREEN);
+        displayClear();
         break;
     case FERME:
         Serial.println("État: FERME");
@@ -109,12 +110,20 @@ void updateState()
     }
 
     case OUVERT:
-        // Todo: Logique de l'état OUVERT
+        if (getButtonPressType(BUTTON_A_PIN, buttonA) == BUTTON_SHORT)
+        {
+            changeState(FERME);
+        }
+        if (getButtonPressType(BUTTON_B_PIN, buttonB) == BUTTON_LONG)
+        {
+            changeState(PROG_SAISIE);
+        }
         break;
 
     case FERME:
     {
         // Todo: Logique de l'état FERME
+        break;
     }
     }
 }
