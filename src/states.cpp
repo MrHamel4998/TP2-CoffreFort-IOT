@@ -23,12 +23,12 @@ void enterState(State state)
     case PROG_SAISIE:
         Serial.println("État: PROG_SAISIE");
         matrixSetMode(MATRIX_MODE_ORANGE_BLINK);
-        beginCodeEntry(CODE_INITIAL);
+        beginCodeEntry(true);
         break;
     case PROG_CONFIRMATION:
         Serial.println("État: PROG_CONFIRMATION");
         matrixSetMode(MATRIX_MODE_ORANGE_BLINK);
-        beginCodeEntry(CODE_CONFIRMATION);
+        beginCodeEntry(false);
         break;
     case OUVERT:
         Serial.println("État: OUVERT");
@@ -37,17 +37,27 @@ void enterState(State state)
         break;
     case FERME:
         Serial.println("État: FERME");
-        // Todo: Logique de l'état FERME
+        matrixSetMode(MATRIX_MODE_RED);
+        displayClear();
+        beginCodeEntry(false);
         break;
     }
 }
 
 void changeState(State newState)
 {
-    if (currentState != newState)
+    State previousState = currentState;
+
+    currentState = newState;
+    stateChanged = true;
+
+    if (previousState == FERME && newState == OUVERT)
     {
-        currentState = newState;
-        stateChanged = true;
+        openServo();
+    }
+    else if (previousState == OUVERT && newState == FERME)
+    {
+        closeServo();
     }
 }
 
@@ -122,7 +132,18 @@ void updateState()
 
     case FERME:
     {
-        // Todo: Logique de l'état FERME
+        const CodeEntryResult result = updateCodeEntry();
+
+        if (result == CODE_MATCH)
+        {
+            changeState(OUVERT);
+        }
+        else if (result == CODE_MISMATCH)
+        {
+            matrixError();
+            stateAfterMatrix = FERME;
+            waitingForMatrix = true;
+        }
         break;
     }
     }

@@ -10,7 +10,7 @@ int savedCode[CODE_LENGTH] = {0, 0, 0, 0};
 int workingCode[CODE_LENGTH] = {0, 0, 0, 0};
 int currentDigit = 0;
 
-CodeEntryMode mode = CODE_INITIAL;
+bool isInitialEntry = true;
 bool complete = false;
 
 bool codesMatch()
@@ -25,9 +25,9 @@ bool codesMatch()
     return true;
 }
 
-void beginCodeEntry(CodeEntryMode entryMode)
+void beginCodeEntry(bool isInitial)
 {
-    mode = entryMode;
+    isInitialEntry = isInitial;
     currentDigit = 0;
     complete = false;
 
@@ -66,7 +66,7 @@ CodeEntryResult updateCodeEntry()
         if (currentDigit >= CODE_LENGTH)
         {
             complete = true;
-            if (mode == CODE_INITIAL)
+            if (isInitialEntry)
             {
                 for (int i = 0; i < CODE_LENGTH; ++i)
                 {
