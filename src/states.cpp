@@ -59,6 +59,19 @@ void changeState(State newState)
     {
         closeServo();
     }
+
+    if (previousState == OUVERT && newState == FERME)
+    {
+        logEvent("FERMETURE");
+    }
+    else if (previousState == FERME && newState == OUVERT)
+    {
+        logEvent("OUVERTURE");
+    }
+    else if (previousState == PROG_CONFIRMATION && newState == OUVERT)
+    {
+        logEvent("CHANGEMENT_CODE");
+    }
 }
 
 void updateState()

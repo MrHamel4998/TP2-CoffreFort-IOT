@@ -70,3 +70,32 @@ void initFirebase() {
     Firebase.begin(&config, &auth);
     Firebase.reconnectWiFi(true);
 }
+
+void logEvent(String eventType)
+{
+    if (!Firebase.ready())
+    {
+        Serial.println("Firebase non disponible!");
+        return;
+    }
+
+    FirebaseJson content;
+
+    content.set("fields/type/stringValue", eventType);
+    content.set("fields/horodatage/stringValue", getCurrentTimestamp());
+    content.set("fields/coffre/stringValue", "Coffre 1");
+
+    if (Firebase.Firestore.createDocument(
+        &fbdo,
+        PROJECT_ID,
+        "",
+        DOCUMENT_PATH,
+        content.raw()))
+    {
+        Serial.println("Evenement enregistre!");
+    }
+    else
+    {
+        Serial.println(fbdo.errorReason());
+    }
+}
