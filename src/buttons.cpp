@@ -14,7 +14,8 @@ void updateButtons()
 
 /*
  * Aide de ChatGPT pour adapter la fonction getButtonPressType,
- * afin de gérer les appuis courts et longs des deux boutons.
+ * afin de gérer les appuis courts et longs des deux boutons. 
+ * [Voir prompt dans le fichier include/buttons.h]
  */
 ButtonState buttonA;
 ButtonState buttonB;

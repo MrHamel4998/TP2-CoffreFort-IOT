@@ -6,8 +6,7 @@ const int RESULT_BLINKS = 3;
 Adafruit_NeoMatrix matrix(
     8, 8, MATRIX_PIN,
     NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
-    NEO_GRB + NEO_KHZ800
-);
+    NEO_GRB + NEO_KHZ800);
 
 MatrixColor blinkColor = MATRIX_GREEN;
 unsigned long lastBlink = 0;

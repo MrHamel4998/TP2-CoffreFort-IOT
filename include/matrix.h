@@ -4,13 +4,15 @@
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
 
-enum MatrixMode {
+enum MatrixMode
+{
     MATRIX_MODE_GREEN,
     MATRIX_MODE_ORANGE_BLINK,
     MATRIX_MODE_RED
 };
 
-enum MatrixColor {
+enum MatrixColor
+{
     MATRIX_RED,
     MATRIX_GREEN,
     MATRIX_ORANGE,
