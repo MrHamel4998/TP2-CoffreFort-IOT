@@ -6,3 +6,4 @@ void initServo();
 void updateServo();
 void openServo();
 void closeServo();
+bool isServoMoving();

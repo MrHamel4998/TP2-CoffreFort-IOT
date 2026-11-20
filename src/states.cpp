@@ -161,3 +161,13 @@ void updateState()
     }
     }
 }
+
+bool isReadyForFirebase()
+{
+    bool isStableState = currentState == OUVERT || currentState == FERME;
+    bool isStateUpdated = !stateChanged;
+    bool isMatrixReady = !waitingForMatrix && matrixAnimationComplete();
+    bool isServoReady = !isServoMoving();
+
+    return isStableState && isStateUpdated && isMatrixReady && isServoReady;
+}

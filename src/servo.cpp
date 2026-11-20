@@ -31,3 +31,8 @@ void closeServo()
     servoStartTime = millis();
     servoMoving = true;
 }
+
+bool isServoMoving()
+{
+    return servoMoving;
+}

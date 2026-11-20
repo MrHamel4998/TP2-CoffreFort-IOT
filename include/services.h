@@ -18,3 +18,4 @@ String  getCurrentTimestamp();
 void initWiFi();
 void initFirebase();
 void logEvent(String eventType);
+void updateServices();

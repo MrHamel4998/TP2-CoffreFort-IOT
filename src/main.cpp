@@ -42,4 +42,5 @@ void loop() {
     updateState();
     updateServo();
     updateMatrix();
+    updateServices();
 }
