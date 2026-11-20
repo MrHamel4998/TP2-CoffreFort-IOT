@@ -34,7 +34,8 @@ void setup() {
     // Services
     initWiFi();
     initFirebase();
-    Serial.println("Services WiFi et Firebase initialisés.");
+    initTime();
+    Serial.println("Services initialisés.");
 }
 
 void loop() {

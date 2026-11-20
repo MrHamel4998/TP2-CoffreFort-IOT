@@ -5,15 +5,51 @@ FirebaseAuth auth;
 FirebaseConfig config; 
 FirebaseData fbdo;
 
+// Source pour la stratégie du temps : 
+// https://youtu.be/CZH4DJAtAVU?si=vRSGo8eH1al1UC0o
+void initTime() {
+    configTime(GMT_OFFSET, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
+
+    struct tm timeinfo;
+
+    Serial.println("Synchronisation de l'heure...");
+    while (!getLocalTime(&timeinfo))
+    {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("Heure synchronisée.");
+}
+
+bool getCurrentTime(struct tm *timeinfo) {
+    return getLocalTime(timeinfo);
+}
+
+String getCurrentTimestamp()
+{
+    struct tm timeinfo;
+
+    if (!getCurrentTime(&timeinfo))
+    {
+        return "";
+    }
+
+    char buffer[20];
+
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &timeinfo);
+
+    return String(buffer);
+}
+
 void initWiFi() {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    Serial.print("Connecting to WiFi ...");
+    Serial.print("Connexion au WiFi ...");
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
     }
-    Serial.println("Connected to WiFi");
+    Serial.println("Connexion au WiFi réussie.");
 }
 
 void initFirebase() {
@@ -24,11 +60,11 @@ void initFirebase() {
     auth.user.password = "";
     if (Firebase.signUp(&config, &auth, "", ""))
     {
-        Serial.println("Firebase sign up successful");
+        Serial.println("Connexion à Firebase réussie.");
     }
     else
     {
-        Serial.printf("Firebase sign up failed: %s\n", config.signer.signupError.message.c_str());
+        Serial.printf("Connexion à Firebase échouée: %s\n", config.signer.signupError.message.c_str());
     }
 
     Firebase.begin(&config, &auth);
